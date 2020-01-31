@@ -13,7 +13,8 @@
 #' @param hist logical input to include histogram of VAI, if TRUE it is included,
 #' if FALSE, it is not.
 #' @param output.file TRUE or FALSE whether to write PAVD to disk
-#' @keywords plant area volume density profile, pavd
+#' @keywords plant area volume density
+#' @concept canopy profile
 #' @return plant area volume density plots
 #'
 #' @export

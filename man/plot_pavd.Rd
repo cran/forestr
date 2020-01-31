@@ -4,8 +4,7 @@
 \alias{plot_pavd}
 \title{Graphs Plant Area Volume Density Profiles}
 \usage{
-plot_pavd(m, filename, plot.file.path.pavd, hist = FALSE,
-  output.file = FALSE)
+plot_pavd(m, filename, plot.file.path.pavd, hist = FALSE, output.file = FALSE)
 }
 \arguments{
 \item{m}{matrix of light adjusted vai values.}
@@ -40,9 +39,8 @@ plot_pavd(pcl_vai, hist = TRUE, output.file = FALSE)
 \seealso{
 \code{\link{plot_hit_grid}}
 }
+\concept{canopy profile}
 \keyword{area}
 \keyword{density}
-\keyword{pavd}
 \keyword{plant}
-\keyword{profile,}
 \keyword{volume}

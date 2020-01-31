@@ -35,10 +35,6 @@ fraction which are used for gap fraction calcuations.
 csc.metrics <- csc_metrics(pcl_adjusted, filename = "UVA", transect.length = 10)
 
 }
-\keyword{canopy}
-\keyword{csc,}
-\keyword{fraction}
-\keyword{fraction,}
-\keyword{rugosity,}
-\keyword{sky}
-\keyword{structure,}
+\concept{structure rugosity sky fraction canopy fraction}
+\keyword{complexity}
+\keyword{statistics}

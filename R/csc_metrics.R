@@ -15,7 +15,8 @@
 #' @param df data frame of uncorrected PCL data
 #' @param filename name of file currently being processed
 #' @param transect.length the length of the transect
-#' @keywords csc, structure, rugosity, sky fraction, canopy fraction
+#' @keywords statistics complexity
+#' @concept structure rugosity sky fraction canopy fraction
 #' @export
 #' @return slew of cover and sky fraction metrics
 #' @examples
@@ -48,6 +49,10 @@ csc_metrics <- function(df, filename, transect.length) {
   message("Standard Deviation of raw  Canopy Height returns-- meanStd in old code")
   print(sd.ht)
 
+  median.ht = stats::median(z$return_distance, na.rm = TRUE)
+  message("Median of raw  Canopy Height returns")
+  print(median.ht)
+
   max.ht = max(df$return_distance, na.rm = TRUE)
   message("Max Measured Canopy Height (m)")
   print(max.ht)
@@ -70,6 +75,7 @@ csc_metrics <- function(df, filename, transect.length) {
   csc.variable.list <- list(plot = filename,
                             mean.return.ht = mean.return.ht,
                             sd.return.ht = sd.ht,
+                            median.ht = median.ht,
                             sky.fraction = sky.fraction,
                             cover.fraction = cover.fraction,
                             max.ht = max.ht,

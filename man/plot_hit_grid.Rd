@@ -29,5 +29,5 @@ plot_hit_grid(pcl_vai, filename = "UVA LiDAR data", transect.length = 40,
  max.ht = 30, max.vai = 8)
 
 }
-\keyword{hitgrid,}
-\keyword{plot,}
+\concept{hit grid plot}
+\keyword{graphics}
