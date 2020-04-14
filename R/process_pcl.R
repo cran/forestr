@@ -68,6 +68,8 @@ process_pcl <- function(f, user_height, marker.spacing, max.vai, pavd = FALSE, h
   xbin <- NULL
   zbin <- NULL
   vai <- NULL
+  key <- NULL
+  value <- NULL
 
   # If missing user height default is 1 m.
   if(missing(user_height)){
@@ -87,7 +89,7 @@ process_pcl <- function(f, user_height, marker.spacing, max.vai, pavd = FALSE, h
   # If output directory name is missing, add it.
   if(missing(save_output)){
     save_output == TRUE
-    output_dir = 'output'
+    output_dir = "output"
   }
 
   #
@@ -95,6 +97,7 @@ process_pcl <- function(f, user_height, marker.spacing, max.vai, pavd = FALSE, h
 
   # Read in PCL transect.
   df<- read_pcl(f)
+
 
     # Cuts off the directory info to give just the filename.
   filename <- sub(".*/", "", f)
@@ -117,24 +120,37 @@ process_pcl <- function(f, user_height, marker.spacing, max.vai, pavd = FALSE, h
   print(transect.length)
 
   # Desginates a LiDAR pulse as either a sky hit or a canopy hit
-  df2 <- code_hits(df)
+  df <- code_hits(df)
 
   message("Table of sky hits")
-  print(table(df2$sky_hit))
+  print(table(df$sky_hit))
 
   # Adjusts by the height of the  user to account for difference in laser height to
   # ground in   meters==default is 1 m.
-  df3 <- adjust_by_user(df2, user_height)
+  df <- adjust_by_user(df, user_height)
 
   # Calculate Statistics on Intensity Values
-  intensity_stats <- calc_intensity(df3, filename)
+  intensity_stats <- calc_intensity(df, filename)
 
   # First-order metrics of sky and cover fraction.
-  csc.metrics <- csc_metrics(df3, filename, transect.length)
+  csc.metrics <- csc_metrics(df, filename, transect.length)
+
 
   # Splits transects from code into segments (distances between markers as designated by        marker.spacing
   # and chunks (1 m chunks in each marker).
-  test.data.binned <- split_transects_from_pcl(df3, transect.length, marker.spacing)
+  test.data.binned <- split_transects_from_pcl(df, transect.length, marker.spacing)
+
+  # creates quantiles from raw data returns...should become it's own function at some point probably
+  quantiles <- data.frame(stats::quantile(df$return_distance, probs = c(0.1, 0.25, 0.5, 0.75, 0.9), na.rm = TRUE))
+  quantiles$key <- as.character(rownames(quantiles))
+  # remove the percent symbol
+  quantiles$key <- gsub("[\\%,]", "", quantiles$key)
+  quantiles$key <- paste0("p", quantiles$key)
+
+  names(quantiles)[1] <- "value"
+  quantiles2 <- tidyr::spread(quantiles, key, value)
+
+    print(quantiles)
 
   # Makes matrix of z and x coordinated pcl data.
   m1 <- make_matrix(test.data.binned)
@@ -145,19 +161,27 @@ process_pcl <- function(f, user_height, marker.spacing, max.vai, pavd = FALSE, h
 
   # Calculates VAI (vegetation area index m^ 2 m^ -2).
   m5 <- calc_vai(m2, max.vai)
+  m5$.id <- NULL #this removes the weird column I can't tell where it comes from
 
   # Summary matrix.
   summary.matrix <- make_summary_matrix(test.data.binned, m5)
   rumple <- calc_rumple(summary.matrix)
   clumping.index <- calc_gap_fraction(m5)
 
+
   variable.list <- calc_rugosity(summary.matrix, m5, filename)
 
   # effective number of layers
   enl <- calc_enl(m5)
 
-  output.variables <- combine_variables(variable.list, csc.metrics, rumple, clumping.index, enl, intensity_stats)
+  # combine data and clean data frames before so
+  csc.metrics$plot <- NULL
+  intensity_stats$plot <- NULL
 
+  output.variables <- cbind(variable.list, csc.metrics, rumple, clumping.index, enl, intensity_stats, quantiles2)
+    #combine_variables(variable.list, csc.metrics, rumple, clumping.index, enl, intensity_stats, quantiles)
+
+  # label for plot
   vai.label =  expression(paste(VAI~(m^2 ~m^-2)))
 
   #setting up VAI hit grid
@@ -189,18 +213,8 @@ process_pcl <- function(f, user_height, marker.spacing, max.vai, pavd = FALSE, h
     ggplot2::ggtitle(filename)+
     ggplot2::theme(plot.title = ggplot2::element_text(lineheight=.8, face="bold"))
 
-  # PAVD
-  if(pavd == TRUE && hist == FALSE){
-
-    plot_pavd(m5, filename, plot.file.path.pavd, output.file = TRUE)
-
-  }
-  if(pavd == TRUE && hist == TRUE){
-
-    plot_pavd(m5, filename, plot.file.path.pavd, hist = TRUE, output.file = TRUE)
-  }
-
   if(save_output == TRUE){
+    output_dir = "output"
 
     #output procedure for variables
     dir.create(output_dir, showWarnings = FALSE)
@@ -214,9 +228,6 @@ process_pcl <- function(f, user_height, marker.spacing, max.vai, pavd = FALSE, h
     write_summary_matrix_to_csv(summary.matrix, outputname, output_directory)
     write_hit_matrix_to_csv(m5, outputname, output_directory)
 
-
-
-
     #get filename first
     plot.filename <- tools::file_path_sans_ext(filename)
     plot.filename.full <- paste(plot.filename, "hit_grid", sep = "_")
@@ -227,8 +238,18 @@ process_pcl <- function(f, user_height, marker.spacing, max.vai, pavd = FALSE, h
 
 
   ggplot2::ggsave(plot.file.path.hg, hit.grid, width = 8, height = 6, units = c("in"))
+  #ggplot2::ggsave(plot.file.path.pavd, plot.pavd, width = 8, height = 6, units = c("in") )
 
   }
 
+  # PAVD
+  if(pavd == TRUE && hist == FALSE && save_output == TRUE){
 
+    pavd.plot <- plot_pavd(m5, filename, plot.file.path.pavd, save_output = TRUE)
+
+  }
+  if(pavd == TRUE && hist == TRUE && save_output == TRUE){
+
+    pavd.plot <- plot_pavd(m5, filename, plot.file.path.pavd, hist = TRUE, save_output = TRUE)
+  }
 }

@@ -10,8 +10,7 @@
 #' @param m matrix of light adjusted vai values.
 #' @param filename the name of the file currently being processed.
 #'
-#' @keywords complexity canopy statistics variance
-#' @concept porosity rugosity
+#' @keywords complexity
 #'
 #' @return a series of metrics that describe canopy and
 #' ecosystem height, density, openness, cover, etc.

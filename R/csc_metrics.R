@@ -15,8 +15,7 @@
 #' @param df data frame of uncorrected PCL data
 #' @param filename name of file currently being processed
 #' @param transect.length the length of the transect
-#' @keywords statistics complexity
-#' @concept structure rugosity sky fraction canopy fraction
+#' @keywords complexity
 #' @export
 #' @return slew of cover and sky fraction metrics
 #' @examples

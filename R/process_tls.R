@@ -89,16 +89,10 @@ process_tls<- function(f, slice, pavd = FALSE, hist = FALSE, save_output = TRUE)
   # derive tls mean leaf height
   m2 <- calc_tls_mean_leaf_ht(m1)
 
+  # making summary data information.
   variable.list <- calc_tls_csc(m2, filename)
-
   output.variables  <- cbind(variable.list)
-
-
   transect.length <- max(m2$xbin)
-
-
-
-
 
   vai.label =  expression(paste(VAI~(m^2 ~m^-2)))
 
@@ -132,18 +126,6 @@ process_tls<- function(f, slice, pavd = FALSE, hist = FALSE, save_output = TRUE)
     ggplot2::theme(plot.title = ggplot2::element_text(lineheight=.8, face="bold"))
 
 
-  # PAVD
-  if(pavd == TRUE && hist == FALSE){
-
-    plot_pavd(m2, filename, plot.file.path.pavd)
-  }
-  if(pavd == TRUE && hist == TRUE){
-
-    plot_pavd(m2, filename, plot.file.path.pavd, hist = TRUE)
-  }
-
-
-
 
 if(save_output == TRUE){
   #output procedure for variables
@@ -164,10 +146,20 @@ if(save_output == TRUE){
   plot.file.path.pavd <- file.path(paste(output_directory, plot.filename.pavd, ".png", sep = ""))
 
   write_pcl_to_csv(output.variables, outputname, output_directory)
-  write_summary_matrix_to_csv(summary.matrix, outputname, output_directory)
-  write_hit_matrix_to_csv(m5, outputname, output_directory)
+  #write_summary_matrix_to_csv(summary.matrix, outputname, output_directory)
+  write_hit_matrix_to_csv(m6, outputname, output_directory)
 
   ggplot2::ggsave(plot.file.path.hg, hit.grid, width = 8, height = 6, units = c("in"))
 
 }
+
+  # PAVD
+  if(pavd == TRUE && hist == FALSE && save_output == TRUE){
+
+    plot_pavd(m2, filename, plot.file.path.pavd, hist = FALSE, save_output = TRUE)
+  }
+  if(pavd == TRUE && hist == TRUE && save_output == TRUE){
+
+    plot_pavd(m2, filename, plot.file.path.pavd, hist = TRUE, save_output = TRUE)
+  }
 }

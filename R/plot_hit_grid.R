@@ -10,7 +10,6 @@
 #' @param max.ht the maximum measured height used to create the y-axis
 #' @param max.vai the maximum density of VAI, defaul = 8
 #' @keywords graphics
-#' @concept hit grid plot
 #' @return a hit gride of VAI
 #'
 #' @export

@@ -55,6 +55,5 @@ max.vai = 8, pavd = FALSE, hist = FALSE, save_output = FALSE)
 \seealso{
 \code{\link{process_pcl}}
 }
-\concept{processing files batch}
-\keyword{files}
-\keyword{multiple}
+\keyword{file}
+\keyword{import}

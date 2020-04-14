@@ -9,7 +9,6 @@
 #' @param df data frame of uncorrected PCL data
 #' @param filename name of file currently being processed
 #' @keywords statisitcs
-#' @concept intensity
 #' @export
 #' @return statisics on the intensity data
 #' @examples

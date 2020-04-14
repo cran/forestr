@@ -30,8 +30,4 @@ and other metrics, including rumple, height metrics, etc.
 calc_rugosity(pcl_summary, pcl_vai, filename = "")
 
 }
-\concept{porosity rugosity}
-\keyword{canopy}
 \keyword{complexity}
-\keyword{statistics}
-\keyword{variance}
